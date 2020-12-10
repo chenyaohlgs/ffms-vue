@@ -5,25 +5,28 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: 'http://localhost:8080',
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 50000 // request timeout
 })
 
 // request interceptor
 service.interceptors.request.use(
   config => {
+    // console.log('开始执行前置过滤器')
     // do something before request is sent
-
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['token'] = getToken()
     }
+    // console.log('结束执行前置过滤器')
     return config
   },
   error => {
+    // console.log('前置控制出现失败')
     // do something with request error
     console.log(error) // for debug
     return Promise.reject(error)
@@ -43,8 +46,9 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    // console.log('开始执行后置过滤器')
     const res = response.data
-
+    // console.log(res)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       Message({
@@ -72,6 +76,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    console.log('=================================')
     console.log('err' + error) // for debug
     Message({
       message: error.message,

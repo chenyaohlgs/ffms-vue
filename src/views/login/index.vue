@@ -3,9 +3,9 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">FFMS Login</h3>
       </div>
-
+      <!-- 登录用户名密码表单 -->
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -42,11 +42,12 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <!-- <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="login">Login</el-button> -->
 
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
-      </div>
+      </div> -->
 
     </el-form>
   </div>
@@ -58,6 +59,7 @@ import { validUsername } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
+    // 校验规则
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
@@ -74,8 +76,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -120,6 +122,13 @@ export default {
           return false
         }
       })
+    // },
+    // login() {
+    //   this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+    //     this.$router.push({ path: '/' }) // 登录成功后重定向到首页
+    //   }).catch(err => {
+    //     this.$message.error(err) // 登录失败提示错误
+    //   })
     }
   }
 }
