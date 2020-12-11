@@ -1,4 +1,4 @@
-import router from './router'
+import { router } from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
@@ -33,9 +33,17 @@ router.beforeEach(async(to, from, next) => {
       } else {
         try {
           // get user info
-          await store.dispatch('user/getInfo')
-
-          next()
+          console.log(hasGetUserInfo)
+          await store.dispatch('user/getInfo').then(() => {
+            const roles = store.getters.role
+            console.log(roles)
+            store.dispatch('permission/GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
+              // console.log(store.getters.role)
+              router.options.routes = store.getters.addRouters// this.router.options.routes 为了菜单组件获取
+              router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+              next({ ...to, replace: true })
+            })
+          })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

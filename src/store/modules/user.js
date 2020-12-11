@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    role: ''
   }
 }
 
@@ -64,7 +65,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-        console.log(data)
+        // console.log(data)
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
@@ -75,6 +76,7 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_ROLE', role)
         resolve(data)
+        console.log('=================')
       }).catch(error => {
         reject(error)
       })
